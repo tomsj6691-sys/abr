@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI BrandRank Institute (AIBRI) | 官方审计公报</title>
+    <meta
+      name="description"
+      content="AIBRI 是一家独立的全球研究机构，通过分布式节点审计人工智能模型中的品牌认知权重。"
+    />
+
+    <!-- 引入权威字体：思源宋体(Serif) 与 思源黑体(Sans) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&family=Noto+Sans+SC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --audit-blue: #1a2b48; /* 审计蓝 */
+        --accent-gold: #b2945e; /* 学术金 */
+        --text-black: #1a1a1a;
+        --text-grey: #555e6d;
+        --bg-light: #f8f9fb;
+        --line: #d1d5db;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Noto Sans SC", sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-black);
+        line-height: 1.8;
+      }
+
+      .serif {
+        font-family: "Noto Serif SC", serif;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      /* --- 顶部实时状态与多语言栏 (优化后) --- */
+      .top-utility-bar {
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+        padding: 8px 0;
+        font-size: 0.7rem; /* 极小字体体现专业感 */
+        letter-spacing: 0.5px;
+        font-weight: bold;
+      }
+
+      .top-bar-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      /* 左侧审计元数据 */
+      .audit-metadata {
+        display: flex;
+        gap: 20px;
+        color: var(--text-grey);
+        text-transform: uppercase;
+      }
+
+      .status-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        background: #28a745; /* 绿色代表活跃 */
+        border-radius: 50%;
+        margin-right: 5px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* 右侧下拉语言切换 */
+      .lang-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .lang-btn {
+        background: none;
+        border: none;
+        color: var(--text-grey);
+        font-size: 0.7rem;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        text-transform: uppercase;
+      }
+
+      .lang-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #fff;
+        min-width: 140px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+        z-index: 2000;
+        border: 1px solid var(--line);
+        margin-top: 5px;
+      }
+
+      .lang-content a {
+        color: var(--text-grey);
+        padding: 10px 15px;
+        text-decoration: none;
+        display: block;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .lang-content a:hover {
+        background-color: var(--bg-light);
+        color: var(--audit-blue);
+      }
+      .lang-dropdown:hover .lang-content {
+        display: block;
+      }
+
+      /* --- 机构 Logo 区 --- */
+      header {
+        background: white;
+        padding: 45px 0;
+        text-align: center;
+      }
+
+      .logo-link {
+        text-decoration: none;
+        color: var(--audit-blue);
+      }
+      .logo-main {
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+      }
+      .logo-sub {
+        font-size: 0.85rem;
+        letter-spacing: 4px;
+        color: var(--accent-gold);
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      /* --- 主导航栏 (带粘性效果) --- */
+      nav {
+        background: white;
+        border-top: 1px solid var(--line);
+        border-bottom: 3px solid var(--audit-blue);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .nav-inner {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 15px 0;
+        gap: 30px;
+      }
+
+      .nav-inner a {
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-black);
+        letter-spacing: 0.5px;
+      }
+
+      .nav-inner a:hover {
+        color: var(--accent-gold);
+      }
+
+      /* --- 主体内容布局 (2.2 : 1) --- */
+      .main-grid {
+        display: grid;
+        grid-template-columns: 2.2fr 1fr;
+        gap: 60px;
+        margin-top: 50px;
+      }
+
+      .section-label {
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--accent-gold);
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+        margin-bottom: 30px;
+        display: block;
+      }
+
+      /* 卡片流样式 */
+      .feed-item {
+        background: white;
+        padding: 35px;
+        border: 1px solid var(--line);
+        margin-bottom: 30px;
+        transition: 0.3s;
+      }
+
+      .feed-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      .meta {
+        font-size: 0.75rem;
+        color: var(--text-grey);
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .tag-bulletin {
+        font-weight: bold;
+        color: var(--audit-blue);
+        border-left: 3px solid var(--accent-gold);
+        padding-left: 10px;
+      }
+
+      .feed-title {
+        font-size: 1.6rem;
+        color: var(--text-black);
+        text-decoration: none;
+        margin-bottom: 15px;
+        display: block;
+        line-height: 1.4;
+      }
+      .feed-title:hover {
+        color: var(--accent-gold);
+      }
+
+      .feed-excerpt {
+        font-size: 1rem;
+        color: var(--text-grey);
+        margin-bottom: 20px;
+        text-align: justify;
+      }
+
+      /* --- 侧边栏 --- */
+      .sidebar-box {
+        background: var(--audit-blue);
+        color: white;
+        padding: 30px;
+        margin-bottom: 35px;
+      }
+      .sidebar-box h3 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        color: var(--accent-gold);
+      }
+      .sidebar-box p {
+        font-size: 0.85rem;
+        line-height: 1.7;
+        opacity: 0.9;
+      }
+
+      /* --- 页脚 (公文样式) --- */
+      footer {
+        background: white;
+        border-top: 1px solid var(--line);
+        padding: 80px 0 40px;
+        margin-top: 80px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 80px;
+      }
+      .inst-desc h4 {
+        font-size: 1.3rem;
+        color: var(--audit-blue);
+        margin-bottom: 15px;
+      }
+      .inst-desc p {
+        font-size: 0.9rem;
+        color: var(--text-grey);
+        line-height: 1.8;
+        margin-bottom: 25px;
+      }
+
+      .inst-address {
+        font-style: normal;
+        font-size: 0.85rem;
+        color: var(--text-black);
+        border-left: 2px solid var(--accent-gold);
+        padding-left: 15px;
+        line-height: 1.6;
+      }
+
+      .footer-links h5 {
+        font-size: 0.85rem;
+        margin-bottom: 25px;
+        color: var(--text-black);
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+      }
+      .footer-links a {
+        display: block;
+        text-decoration: none;
+        color: var(--text-grey);
+        font-size: 0.85rem;
+        margin-bottom: 12px;
+      }
+
+      .legal-bar {
+        border-top: 1px solid var(--line);
+        padding-top: 35px;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-grey);
+        margin-top: 50px;
+      }
+
+      @media (max-width: 900px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+        .audit-metadata {
+          display: none;
+        } /* 移动端隐藏元数据以节省空间 */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 顶部审计元数据与多语言切换栏 -->
+    <div class="top-utility-bar">
+      <div class="container top-bar-inner">
+        <!-- 左侧：实时审计状态数据 (让顶部丰满且专业) -->
+        <div class="audit-metadata">
+          <div><span class="status-dot"></span>GLOBAL NODES: 24 ACTIVE</div>
+          <div>PROTOCOL: V1.0.4</div>
+          <div style="color: var(--accent-gold)">DATA TRACE: PROCESSING...</div>
+        </div>
+
+        <!-- 右侧：多语言下拉菜单 -->
+        <div class="lang-dropdown">
+          <button class="lang-btn">🌐 LANGUAGE: 中文 (简体)</button>
+          <div class="lang-content">
+            <a href="#">English</a>
+            <a href="#">Español</a>
+            <a href="#">Français</a>
+            <a href="#">Deutsch</a>
+            <a href="#">中文 (简体)</a>
+            <a href="#">日本語</a>
+            <a href="#">العربية</a>
+            <a href="#">Português</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 机构 Logo 区 -->
+    <header>
+      <div class="container">
+        <a href="/" class="logo-link">
+          <h1 class="logo-main serif">AI BrandRank Institute</h1>
+          <div class="logo-sub">Official Bureau of Algorithmic Recognition Auditing</div>
+        </a>
+      </div>
+    </header>
+
+    <!-- 主导航 -->
+    <nav>
+      <div class="container">
+        <ul class="nav-inner">
+          <li><a href="#">审计动态</a></li>
+          <li><a href="#">行业报告</a></li>
+          <li><a href="#">偏差预警</a></li>
+          <li><a href="#">审计方法论</a></li>
+          <li><a href="#">关于审计员</a></li>
+          <li><a href="#">证据存档库</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container main-grid">
+      <!-- 左侧：公告动态 -->
+      <main>
+        <span class="section-label">官方审计公报</span>
+
+        <article class="feed-item">
+          <div class="meta">
+            <span class="tag-bulletin">机构公告</span>
+            <span>2025年3月</span>
+          </div>
+          <a href="#" class="feed-title serif">关于“全球 AI 认知指数 (AIRI)”首期审计发布的预告</a>
+          <p class="feed-excerpt">
+            AI BrandRank Institute (AIBRI)
+            正式宣布完成首期审计方法论确立。首份报告将聚焦全球“智能电动汽车 (Smart
+            EV)”行业，量化分析主流 AI 模型在地缘认知上的权重偏差。
+          </p>
+          <a
+            href="#"
+            style="
+              font-size: 0.85rem;
+              font-weight: bold;
+              color: var(--audit-blue);
+              text-decoration: none;
+              border-bottom: 2px solid var(--accent-gold);
+            "
+            >查看备案详情 →</a
+          >
+        </article>
+
+        <article class="feed-item">
+          <div class="meta">
+            <span class="tag-bulletin">实时动态</span>
+            <span>编号: CF-2025-001</span>
+          </div>
+          <a href="#" class="feed-title serif">审计观察：大模型版本更新对品牌认知时延的影响分析</a>
+          <p class="feed-excerpt">
+            初步审计数据显示，近期大型语言模型的参数微调显著改变了消费电子品牌在欧洲节点的推荐优先级。AIBRI
+            正在进行多模型交叉验证。
+          </p>
+          <a
+            href="#"
+            style="
+              font-size: 0.85rem;
+              font-weight: bold;
+              color: var(--audit-blue);
+              text-decoration: none;
+              border-bottom: 2px solid var(--accent-gold);
+            "
+            >查看审计轨迹 →</a
+          >
+        </article>
+      </main>
+
+      <!-- 右侧：侧边栏 -->
+      <aside>
+        <span class="section-label">审计员办公室</span>
+        <div class="sidebar-box">
+          <h3>独立性声明</h3>
+          <p>
+            AIBRI 坚持严格的中立性审计准则，独立于品牌方与 AI
+            模型开发厂商。我们拒绝接受任何旨在操纵认知得分的商业赞助。
+          </p>
+          <div
+            style="
+              font-size: 0.8rem;
+              border-top: 1px solid rgba(255, 255, 255, 0.2);
+              margin-top: 15px;
+              padding-top: 15px;
+            "
+          >
+            首席审计员: Striver<br />
+            当前状态: 正在进行全球探测
+          </div>
+        </div>
+
+        <div
+          class="sidebar-box"
+          style="background: white; border: 1px solid var(--line); color: var(--text-black)"
+        >
+          <h3 style="color: var(--audit-blue)">数据真实性</h3>
+          <p style="color: var(--text-grey)">
+            所有审计结果均附带原始对话日志及不可篡改的时间戳，确保审计结果在技术层面的可验证性。
+          </p>
+          <a
+            href="#"
+            style="
+              color: var(--accent-gold);
+              font-size: 0.85rem;
+              font-weight: bold;
+              text-decoration: none;
+              display: block;
+              margin-top: 15px;
+            "
+            >进入证据库 →</a
+          >
+        </div>
+      </aside>
+    </div>
+
+    <!-- 页脚区 -->
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="inst-desc">
+            <h4 class="serif">AIBRI</h4>
+            <p>
+              一家致力于算法商业时代透明度与公平性的独立研究机构。我们通过分布式全球节点审计人工智能对现实世界的认知偏差，为品牌确立数字时代的认知基准。
+            </p>
+            <address class="inst-address">
+              <strong>AI BrandRank Institute (AIBRI)</strong><br />
+              Paseo de la Castellana, 259C, Torre de Cristal<br />
+              28046 Madrid, Spain (西班牙 · 马德里)
+            </address>
+          </div>
+          <div class="footer-links">
+            <h5>机构事务</h5>
+            <a href="#">关于 AIBRI</a>
+            <a href="#">审计员简介</a>
+            <a href="#">审计方法论</a>
+            <a href="#">联系我们</a>
+          </div>
+          <div class="footer-links">
+            <h5>合规声明</h5>
+            <a href="#">隐私权政策</a>
+            <a href="#">服务条款</a>
+            <a href="#">反欺诈声明</a>
+            <a href="#">审计诚信准则</a>
+          </div>
+        </div>
+        <div class="legal-bar">
+          <p>&copy; 2025 AI BrandRank Institute (AIBRI). 注册研究机构。内容受国际版权法保护。</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

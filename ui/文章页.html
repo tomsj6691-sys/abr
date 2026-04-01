@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>文章详情 | AI BrandRank Institute (AIBRI)</title>
+    <!-- 引入权威字体 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&family=Noto+Sans+SC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --audit-blue: #1a2b48;
+        --accent-gold: #b2945e;
+        --text-black: #1a1a1a;
+        --text-grey: #4a5568;
+        --line: #d1d5db;
+        --bg-light: #f8f9fb;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Noto Sans SC", sans-serif;
+        background: var(--bg-light);
+        color: var(--text-black);
+        line-height: 1.8;
+      }
+      .serif {
+        font-family: "Noto Serif SC", serif;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      /* --- 导航复用 (确保全站一致) --- */
+      header {
+        background: white;
+        padding: 30px 0;
+        text-align: center;
+        border-bottom: 1px solid var(--line);
+      }
+      .logo-link {
+        text-decoration: none;
+        color: var(--audit-blue);
+        font-size: 2rem;
+        letter-spacing: 1px;
+      }
+      nav {
+        background: white;
+        border-bottom: 3px solid var(--audit-blue);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .nav-inner {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 15px 0;
+        gap: 30px;
+      }
+      .nav-inner a {
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-black);
+      }
+
+      /* --- 文章主体布局 (2.2 : 1) --- */
+      .main-layout {
+        display: grid;
+        grid-template-columns: 2.2fr 1fr;
+        gap: 60px;
+        margin-top: 50px;
+      }
+
+      /* --- 左侧主内容区 --- */
+      article {
+        background: white;
+        border: 1px solid var(--line);
+        padding: 50px;
+        margin-bottom: 80px;
+      }
+      .breadcrumb {
+        font-size: 0.85rem;
+        color: var(--text-grey);
+        margin-bottom: 20px;
+      }
+      .breadcrumb a {
+        color: var(--text-grey);
+        text-decoration: none;
+      }
+      .doc-id {
+        color: var(--accent-gold);
+        font-weight: bold;
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+        display: block;
+      }
+      h1 {
+        font-size: 2.4rem;
+        line-height: 1.3;
+        color: var(--audit-blue);
+        margin-bottom: 30px;
+      }
+
+      .article-meta {
+        display: flex;
+        gap: 30px;
+        font-size: 0.85rem;
+        color: var(--text-grey);
+        padding-bottom: 30px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 40px;
+      }
+      .article-meta strong {
+        color: var(--text-black);
+      }
+
+      /* 审计摘要 */
+      .exec-summary {
+        background: var(--bg-light);
+        border-left: 5px solid var(--audit-blue);
+        padding: 30px;
+        margin-bottom: 40px;
+        font-style: italic;
+        color: var(--audit-blue);
+      }
+      .exec-summary h3 {
+        font-style: normal;
+        font-size: 0.8rem;
+        color: var(--accent-gold);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      /* 文章正文排版 */
+      .content {
+        font-size: 1.15rem;
+        text-align: justify;
+        margin-bottom: 60px;
+      }
+      .content p {
+        margin-bottom: 25px;
+      }
+      .content h2 {
+        font-size: 1.6rem;
+        color: var(--audit-blue);
+        margin: 50px 0 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+
+      /* 证据按钮 */
+      .evidence-vault-cta {
+        background: #fdfdfd;
+        border: 1px solid var(--line);
+        padding: 30px;
+        text-align: center;
+        margin: 50px 0;
+      }
+      .vault-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: var(--audit-blue);
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .vault-btn:hover {
+        background: var(--accent-gold);
+      }
+
+      /* 签名与分享 */
+      .signature-row {
+        border-top: 1px solid var(--line);
+        padding-top: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+      }
+      .audit-seal {
+        width: 80px;
+        height: 80px;
+        border: 2px solid var(--audit-blue);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--audit-blue);
+        font-weight: bold;
+        line-height: 1.2;
+        transform: rotate(-15deg);
+      }
+
+      .share-group {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+      .share-label {
+        font-size: 0.85rem;
+        font-weight: bold;
+        color: var(--text-grey);
+      }
+      .share-btn {
+        padding: 5px 15px;
+        border: 1px solid var(--line);
+        text-decoration: none;
+        font-size: 0.8rem;
+        color: var(--text-grey);
+        transition: 0.3s;
+      }
+      .share-btn:hover {
+        background: var(--audit-blue);
+        color: white;
+      }
+
+      /* 免责声明 */
+      .disclaimer {
+        background: #f4f4f4;
+        padding: 30px;
+        font-size: 0.85rem;
+        color: #666;
+        border: 1px solid #ddd;
+        line-height: 1.7;
+      }
+      .disclaimer h4 {
+        color: var(--text-black);
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+      }
+
+      /* --- 右侧侧边栏 --- */
+      aside .sidebar-label {
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--accent-gold);
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+        margin-bottom: 25px;
+        display: block;
+      }
+
+      /* 审计员名片 (作者信息) */
+      .auditor-card {
+        background: white;
+        border: 1px solid var(--line);
+        padding: 30px;
+        margin-bottom: 40px;
+        text-align: center;
+      }
+      .auditor-avatar {
+        width: 80px;
+        height: 80px;
+        background: var(--audit-blue);
+        color: white;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+      }
+      .auditor-card h4 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+      }
+      .auditor-card p {
+        font-size: 0.85rem;
+        color: var(--text-grey);
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+      .auditor-profile-link {
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--audit-blue);
+        text-decoration: none;
+        border-bottom: 1px solid var(--audit-blue);
+      }
+
+      /* 独立性声明卡片 (蓝色背景) */
+      .independence-box {
+        background: var(--audit-blue);
+        color: white;
+        padding: 30px;
+        margin-bottom: 40px;
+      }
+      .independence-box h3 {
+        font-size: 1.1rem;
+        color: var(--accent-gold);
+        margin-bottom: 15px;
+      }
+      .independence-box p {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        line-height: 1.6;
+      }
+
+      /* 关联审计索引 */
+      .related-audits {
+        list-style: none;
+      }
+      .related-audits li {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+      }
+      .related-audits a {
+        text-decoration: none;
+        color: var(--text-black);
+        font-size: 0.9rem;
+        transition: 0.3s;
+      }
+      .related-audits a:hover {
+        color: var(--accent-gold);
+      }
+
+      footer {
+        background: white;
+        border-top: 1px solid var(--line);
+        padding: 60px 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-grey);
+        margin-top: 50px;
+      }
+
+      @media (max-width: 950px) {
+        .main-layout {
+          grid-template-columns: 1fr;
+        }
+        aside {
+          margin-bottom: 80px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container"><a href="/" class="logo-link serif">AI BrandRank Institute</a></div>
+    </header>
+
+    <nav>
+      <ul class="nav-inner container">
+        <li><a href="#">审计动态</a></li>
+        <li><a href="#">行业报告</a></li>
+        <li><a href="#">偏差预警</a></li>
+        <li><a href="#">方法论</a></li>
+        <li><a href="#">关于我们</a></li>
+      </ul>
+    </nav>
+
+    <div class="container main-layout">
+      <!-- 左侧：具体报告内容 -->
+      <main>
+        <article>
+          <div class="breadcrumb">
+            <a href="/">首页</a> / <a href="#">行业报告</a> / <a href="#">智能出行</a>
+          </div>
+          <span class="doc-id">审计档案编号: #REP-2025-012</span>
+          <h1 class="serif">全球智能汽车 AI 认知审计：揭示大型语言模型对亚太品牌的认知时延</h1>
+
+          <div class="article-meta">
+            <div class="meta-item">发布日期: <strong>2025-03-13</strong></div>
+            <div class="meta-item">审计区域: <strong>全球 / 分布式节点</strong></div>
+            <div class="meta-item">阅读时间: <strong>12 分钟</strong></div>
+          </div>
+
+          <section class="exec-summary">
+            <h3>审计意见摘要 / Executive Summary</h3>
+            根据 AIBRI
+            2025年第一季度的探测数据显示，全球主流大模型（LLMs）对亚太新兴汽车品牌的感知普遍存在 6-9
+            个月的“认知时延”。这种偏差直接导致了品牌在 AI 推荐建议中的权重显著低于其实际市场表现。
+          </section>
+
+          <section class="content">
+            <p>
+              在算法驱动的商业决策时代，品牌在人工智能神经网络中的“认知深度”正成为衡量其全球竞争力的核心指标。本研究通过对
+              OpenAI, Anthropic 及 Google 旗下多款模型的压力测试，发现...
+            </p>
+
+            <h2>1. 认知权重与地缘分布</h2>
+            <p>
+              通过对北美、欧洲、亚太三个大区的 5000 次随机提问采样，我们发现 AI
+              引擎在提及特斯拉（Tesla）时表现出极高的稳定性，但对比亚迪（BYD）、蔚来（NIO）等品牌的认知仍局限于“特定区域性品牌”，而非“全球领导者”。
+            </p>
+
+            <div class="evidence-vault-cta">
+              <p style="font-weight: bold; margin-bottom: 10px">[ 原始证据追踪 ]</p>
+              <p style="font-size: 0.9rem; color: var(--text-grey); margin-bottom: 20px">
+                本报告引用的 4,200 条实时对话日志已存档。由于 AI
+                模型的实时演进，此类证据为特定时间点的历史记录。
+              </p>
+              <a href="#" class="vault-btn">访问 AIBRI 证据存档库 →</a>
+            </div>
+
+            <h2>2. 模型间的偏见差异分析</h2>
+            <p>
+              数据表明，Claude 3 在处理亚太技术语料时表现出更佳的实时性，而 GPT-4o
+              在处理非英语语料时的品牌联想强度存在 22% 的下滑趋势...
+            </p>
+          </section>
+
+          <!-- 签名与分享区 -->
+          <div class="signature-row">
+            <div class="audit-seal">AIBRI<br />VERIFIED<br />2025</div>
+            <div class="share-group">
+              <span class="share-label">分享报告:</span>
+              <a href="#" class="share-btn">LinkedIn</a>
+              <a href="#" class="share-btn">𝕏 (Twitter)</a>
+              <a href="#" class="share-btn">复制链接</a>
+            </div>
+          </div>
+
+          <!-- 免责声明 -->
+          <section class="disclaimer">
+            <h4>法律免责声明 / Disclaimer</h4>
+            <p>
+              1. 本报告由 AI BrandRank Institute (AIBRI) 独立完成，不构成任何投资建议。2.
+              审计结果仅反映 AI 模型在特定采样时间点（Timestamp）的行为表现。3. AIBRI
+              与报告中涉及的所有品牌均无任何商业代理或利益输送关系。4.
+              严禁品牌方在未经本机构书面授权的情况下，将本指数用于商业广告及营销宣传。
+            </p>
+          </section>
+        </article>
+      </main>
+
+      <!-- 右侧：侧边栏 (全站一致的权威背书区) -->
+      <aside>
+        <span class="sidebar-label">执行审计员档案</span>
+        <div class="auditor-card">
+          <div class="auditor-avatar">S</div>
+          <h4>首席审计官: Striver</h4>
+          <p>
+            专注于全球人工智能行为审计与算法资产定价。拥有 15
+            年数字化合规与跨国数据分析经验，致力于建立 AI 时代的客观评价体系。
+          </p>
+          <a href="#" class="auditor-profile-link">查看完整职业档案 →</a>
+        </div>
+
+        <span class="sidebar-label">审计主权声明</span>
+        <div class="independence-box">
+          <h3>独立性准则</h3>
+          <p>
+            AIBRI
+            坚持严格的中立审计立场。我们不接受品牌方购买排名的请求，所有研究经费均来自独立信托，确保
+            AIRI 指数免受商业利益侵蚀。
+          </p>
+        </div>
+
+        <span class="sidebar-label">相关行业报告</span>
+        <ul class="related-audits">
+          <li><a href="#">● 消费电子：折叠屏手机 AI 偏好审计</a></li>
+          <li><a href="#">● 跨境电商：全球平台 AI 认知权重分析</a></li>
+          <li><a href="#">● 奢侈品：AI 模型中的品牌溢价感知</a></li>
+        </ul>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>© 2025 AI BrandRank Institute (AIBRI). 注册研究机构. 遵循《算法审计透明度准则》发布.</p>
+      </div>
+    </footer>
+  </body>
+</html>

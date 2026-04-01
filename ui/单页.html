@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>单页标题 | AI BrandRank Institute (AIBRI)</title>
+    <!-- 引入字体 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&family=Noto+Sans+SC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --audit-blue: #1a2b48;
+        --accent-gold: #b2945e;
+        --text-black: #1a1a1a;
+        --text-grey: #4a5568;
+        --line: #d1d5db;
+        --bg-light: #f8f9fb;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Noto Sans SC", sans-serif;
+        background: var(--bg-light);
+        color: var(--text-black);
+        line-height: 1.8;
+      }
+      .serif {
+        font-family: "Noto Serif SC", serif;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      /* --- 头部与导航复用 (全站一致) --- */
+      header {
+        background: white;
+        padding: 30px 0;
+        text-align: center;
+        border-bottom: 1px solid var(--line);
+      }
+      .logo-link {
+        text-decoration: none;
+        color: var(--audit-blue);
+        font-size: 2rem;
+        letter-spacing: 1px;
+      }
+      nav {
+        background: white;
+        border-bottom: 3px solid var(--audit-blue);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .nav-inner {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 15px 0;
+        gap: 30px;
+      }
+      .nav-inner a {
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-black);
+      }
+
+      /* --- 单页布局 (2.2 : 1) --- */
+      .page-layout {
+        display: grid;
+        grid-template-columns: 2.2fr 1fr;
+        gap: 60px;
+        margin-top: 50px;
+      }
+
+      /* --- 左侧主内容区 --- */
+      .content-box {
+        background: white;
+        border: 1px solid var(--line);
+        padding: 50px;
+        margin-bottom: 80px;
+      }
+      .breadcrumb {
+        font-size: 0.85rem;
+        color: var(--text-grey);
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 2.5rem;
+        color: var(--audit-blue);
+        margin-bottom: 20px;
+      }
+      .last-updated {
+        font-size: 0.85rem;
+        color: var(--text-grey);
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+        margin-bottom: 40px;
+      }
+
+      /* 正文样式 */
+      .static-content {
+        font-size: 1.05rem;
+        color: var(--text-black);
+        text-align: justify;
+      }
+      .static-content h2 {
+        font-size: 1.6rem;
+        color: var(--audit-blue);
+        margin: 40px 0 20px;
+        border-left: 4px solid var(--accent-gold);
+        padding-left: 15px;
+      }
+      .static-content p {
+        margin-bottom: 20px;
+      }
+      .static-content ul,
+      .static-content ol {
+        margin-bottom: 20px;
+        padding-left: 20px;
+      }
+      .static-content li {
+        margin-bottom: 10px;
+      }
+
+      /* 针对“审计员列表”页面的特殊网格样式 */
+      .auditors-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-top: 40px;
+      }
+      .auditor-mini-card {
+        border: 1px solid #eee;
+        padding: 25px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+        transition: 0.3s;
+      }
+      .auditor-mini-card:hover {
+        border-color: var(--audit-blue);
+        background: var(--bg-light);
+      }
+      .mini-avatar {
+        width: 50px;
+        height: 50px;
+        background: var(--audit-blue);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      /* --- 右侧侧边栏 --- */
+      .sidebar-label {
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--accent-gold);
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+        margin-bottom: 25px;
+        display: block;
+      }
+
+      .status-box {
+        background: white;
+        border: 1px solid var(--line);
+        padding: 25px;
+        margin-bottom: 40px;
+      }
+      .status-item {
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+        border-bottom: 1px dashed #eee;
+        padding-bottom: 10px;
+      }
+      .status-item span {
+        font-weight: bold;
+        color: var(--audit-blue);
+        float: right;
+      }
+
+      .sidebar-nav {
+        list-style: none;
+      }
+      .sidebar-nav li {
+        margin-bottom: 12px;
+      }
+      .sidebar-nav a {
+        text-decoration: none;
+        color: var(--text-grey);
+        font-size: 0.9rem;
+        transition: 0.3s;
+      }
+      .sidebar-nav a:hover {
+        color: var(--audit-blue);
+        font-weight: bold;
+      }
+
+      /* 官方印章 */
+      .official-seal {
+        margin-top: 50px;
+        text-align: center;
+        opacity: 0.3;
+        filter: grayscale(1);
+        pointer-events: none;
+      }
+
+      footer {
+        background: white;
+        border-top: 1px solid var(--line);
+        padding: 60px 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-grey);
+      }
+
+      @media (max-width: 950px) {
+        .page-layout {
+          grid-template-columns: 1fr;
+        }
+        .auditors-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container"><a href="/" class="logo-link serif">AI BrandRank Institute</a></div>
+    </header>
+
+    <nav>
+      <ul class="nav-inner container">
+        <li><a href="#">审计动态</a></li>
+        <li><a href="#">行业报告</a></li>
+        <li><a href="#">偏差预警</a></li>
+        <li><a href="#">方法论</a></li>
+        <li><a href="#">关于我们</a></li>
+      </ul>
+    </nav>
+
+    <div class="container page-layout">
+      <!-- 左侧：内容区 -->
+      <main class="content-box">
+        <div class="breadcrumb"><a href="/">首页</a> / 机构事务</div>
+        <h1 class="serif" id="page-title">关于审计员 (Auditor Profiles)</h1>
+        <div class="last-updated" id="last-updated">最后更新日期: 2025年3月13日</div>
+
+        <div class="static-content" id="main-content">
+          <!-- 场景 1：如果是“关于审计员”页面 -->
+          <p>
+            AIBRI
+            的每一项审计结果均由具备深厚算法背景、数字化合规经验及行业洞察力的职业审计员核准。我们坚持独立客观的职业操守。
+          </p>
+
+          <div class="auditors-grid">
+            <!-- 审计员 1 -->
+            <a href="/auditor-striver.html" class="auditor-mini-card">
+              <div class="mini-avatar">S</div>
+              <div>
+                <div style="font-weight: bold">Striver</div>
+                <div style="font-size: 0.8rem; color: var(--text-grey)">
+                  首席审计官 / Lead Auditor
+                </div>
+              </div>
+            </a>
+            <!-- 审计员 2 -->
+            <a href="#" class="auditor-mini-card">
+              <div class="mini-avatar">A</div>
+              <div>
+                <div style="font-weight: bold">Auditor 02</div>
+                <div style="font-size: 0.8rem; color: var(--text-grey)">高级算法审计员</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- 场景 2：如果是“隐私协议”等文本页面 (程序员可替换此处) -->
+          <!--
+                <h2>1. 数据收集范围</h2>
+                <p>本机构仅收集公开可获取的 AI 模型输出数据，不涉及任何个人隐私或未授权数据...</p>
+                -->
+        </div>
+      </main>
+
+      <!-- 右侧：导航与元数据区 -->
+      <aside>
+        <span class="sidebar-label">文档状态 / Status</span>
+        <div class="status-box">
+          <div class="status-item">核准状态 <span>已生效</span></div>
+          <div class="status-item">文档编号 <span>AIBRI-POL-003</span></div>
+          <div class="status-item">机密层级 <span>公开 (Public)</span></div>
+        </div>
+
+        <span class="sidebar-label">关联政策 / Related</span>
+        <ul class="sidebar-nav">
+          <li><a href="#">● 反欺诈声明</a></li>
+          <li><a href="#">● 数据采集伦理</a></li>
+          <li><a href="#">● 服务条款</a></li>
+          <li><a href="#">● 审计准则</a></li>
+        </ul>
+
+        <div class="official-seal">
+          <div
+            style="
+              border: 4px solid var(--audit-blue);
+              width: 120px;
+              height: 120px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: bold;
+              color: var(--audit-blue);
+              transform: rotate(-15deg);
+              margin: 0 auto;
+            "
+          >
+            AIBRI<br />OFFICIAL<br />DOC
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>© 2025 AI BrandRank Institute (AIBRI). 所有单页内容均受机构合规部核准.</p>
+      </div>
+    </footer>
+  </body>
+</html>

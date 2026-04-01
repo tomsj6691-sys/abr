@@ -1,0 +1,17 @@
+域名
+https://aibrandrank.org/
+
+
+首页顶部结构解释
+节点状态（Node Status）：例如“Global Nodes: 24 Active”。这展示了您的分布式抓取能力。
+协议版本（Protocol）：例如“Current Protocol: v1.0.4”。这展示了您的标准化程度。
+实时提示（Live Trace）：一个小绿点，显示“Perception Data: Processing...”。
+
+
+
+
+偏差预警分类：
+认知时延预警 (Knowledge Latency)
+地理认知偏差 (Geographic Bias)
+功能误导审计 (Functional Hallucination)
+推荐排斥预警 (Recommendation Exclusion)

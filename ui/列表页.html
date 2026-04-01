@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>行业报告 | AI BrandRank Institute (AIBRI)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&family=Noto+Sans+SC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --audit-blue: #1a2b48;
+        --accent-gold: #b2945e;
+        --text-black: #1a1a1a;
+        --text-grey: #555e6d;
+        --line: #d1d5db;
+        --bg-light: #f8f9fb;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Noto Sans SC", sans-serif;
+        background: var(--bg-light);
+        color: var(--text-black);
+        line-height: 1.8;
+      }
+      .serif {
+        font-family: "Noto Serif SC", serif;
+      }
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      /* --- 导航复用 --- */
+      .top-bar {
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+        padding: 10px 0;
+        text-align: right;
+      }
+      header {
+        background: white;
+        padding: 30px 0;
+        text-align: center;
+        border-bottom: 1px solid var(--line);
+      }
+      .logo-link {
+        text-decoration: none;
+        color: var(--audit-blue);
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+      }
+      nav {
+        background: white;
+        border-bottom: 3px solid var(--audit-blue);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .nav-inner {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 15px 0;
+        gap: 30px;
+      }
+      .nav-inner a {
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-black);
+      }
+
+      /* --- 频道标题区 --- */
+      .channel-header {
+        background: white;
+        padding: 60px 0 40px;
+        border-bottom: 1px solid var(--line);
+      }
+      .breadcrumb {
+        font-size: 0.8rem;
+        color: var(--text-grey);
+        margin-bottom: 15px;
+      }
+      .channel-title {
+        font-size: 2.4rem;
+        color: var(--audit-blue);
+        margin-bottom: 15px;
+      }
+      .channel-desc {
+        font-size: 1rem;
+        color: var(--text-grey);
+        max-width: 800px;
+      }
+
+      /* --- 标签选择器 (Category Tabs) --- */
+      .tag-container {
+        background: white;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 54px;
+        z-index: 999;
+      }
+      .tag-list {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .tag-btn {
+        padding: 6px 18px;
+        border: 1px solid var(--line);
+        background: white;
+        color: var(--text-grey);
+        font-size: 0.85rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.2s;
+        font-weight: bold;
+      }
+      .tag-btn:hover {
+        border-color: var(--audit-blue);
+        color: var(--audit-blue);
+      }
+      .tag-btn.active {
+        background: var(--audit-blue);
+        color: white;
+        border-color: var(--audit-blue);
+      }
+
+      /* --- 列表布局 --- */
+      .main-grid {
+        display: grid;
+        grid-template-columns: 2.2fr 1fr;
+        gap: 60px;
+        margin-top: 40px;
+      }
+
+      /* 列表卡片 */
+      .card {
+        background: white;
+        border: 1px solid var(--line);
+        padding: 30px;
+        margin-bottom: 30px;
+      }
+      .card-meta {
+        font-size: 0.75rem;
+        color: var(--text-grey);
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .card-tag {
+        color: var(--accent-gold);
+        font-weight: bold;
+      }
+      .card-title {
+        font-size: 1.5rem;
+        color: var(--text-black);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 12px;
+      }
+      .card-excerpt {
+        font-size: 0.95rem;
+        color: var(--text-grey);
+        margin-bottom: 20px;
+        text-align: justify;
+      }
+      .read-link {
+        font-size: 0.85rem;
+        font-weight: bold;
+        color: var(--audit-blue);
+        text-decoration: none;
+        border-bottom: 2px solid var(--accent-gold);
+      }
+
+      /* 侧边栏 */
+      .sidebar-label {
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--accent-gold);
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+        display: block;
+      }
+      .sidebar-box {
+        background: var(--audit-blue);
+        color: white;
+        padding: 25px;
+        margin-bottom: 30px;
+      }
+      .sidebar-box h4 {
+        margin-bottom: 10px;
+        color: var(--accent-gold);
+        font-size: 1rem;
+      }
+      .sidebar-box p {
+        font-size: 0.8rem;
+        opacity: 0.9;
+      }
+
+      footer {
+        background: white;
+        border-top: 1px solid var(--line);
+        padding: 50px 0;
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--text-grey);
+        margin-top: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container"><a href="/" class="logo-link serif">AI BrandRank Institute</a></div>
+    </header>
+
+    <nav>
+      <ul class="nav-inner container">
+        <li><a href="#">审计动态</a></li>
+        <li><a href="#" style="color: var(--accent-gold)">行业报告</a></li>
+        <li><a href="#">偏差预警</a></li>
+        <li><a href="#">方法论</a></li>
+        <li><a href="#">关于我们</a></li>
+      </ul>
+    </nav>
+
+    <!-- 频道头部 -->
+    <section class="channel-header">
+      <div class="container">
+        <div class="breadcrumb">首页 / 行业报告</div>
+        <h1 class="channel-title serif">行业报告 (Sector Reports)</h1>
+        <p class="channel-desc">
+          AIBRI 定期发布针对全球关键工业领域的 AI
+          认知审计报告。我们通过海量对话采样，量化不同品牌在算法推荐中的权重与地理偏见。
+        </p>
+      </div>
+    </section>
+
+    <!-- 标签筛选栏 -->
+    <div class="tag-container">
+      <div class="container tag-list">
+        <a href="#" class="tag-btn active">全部领域</a>
+        <a href="#" class="tag-btn">智能汽车 (EV)</a>
+        <a href="#" class="tag-btn">消费电子</a>
+        <a href="#" class="tag-btn">跨境电商</a>
+        <a href="#" class="tag-btn">金融服务</a>
+        <a href="#" class="tag-btn">奢侈品与生活方式</a>
+      </div>
+    </div>
+
+    <div class="container main-grid">
+      <main>
+        <article class="card">
+          <div class="card-meta">
+            <span class="card-tag">智能汽车</span>
+            <span>档案号: REP-2025-012</span>
+          </div>
+          <a href="#" class="card-title serif">2025年第一季度全球智能汽车 AI 认知审计摘要</a>
+          <p class="card-excerpt">
+            通过对全球 24 个分布式节点、涵盖 7
+            种主流大型语言模型的持续探测，本报告揭示了中国汽车品牌在西方 AI
+            模型中的“认知时延”现象...
+          </p>
+          <a href="#" class="read-link">查看完整审计文件 →</a>
+        </article>
+
+        <article class="card">
+          <div class="card-meta">
+            <span class="card-tag">消费电子</span>
+            <span>档案号: REP-2025-009</span>
+          </div>
+          <a href="#" class="card-title serif">折叠屏手机市场：AI 推荐引擎的行为偏好分析</a>
+          <p class="card-excerpt">
+            审计结果显示，AI
+            引擎在向欧洲用户推荐折叠屏设备时，存在显著的品牌路径依赖，对新兴技术的捕获成功率不足
+            35%...
+          </p>
+          <a href="#" class="read-link">查看完整审计文件 →</a>
+        </article>
+      </main>
+
+      <aside>
+        <span class="sidebar-label">首席审计官准则</span>
+        <div class="sidebar-box">
+          <h4>独立性承诺</h4>
+          <p>
+            AIBRI 拒绝接受任何旨在影响审计排名的商业赞助。我们的所有研究经费均来自独立信托，确保
+            AIRI 指数的绝对纯洁性。
+          </p>
+        </div>
+        <span class="sidebar-label">最近预警</span>
+        <ul style="list-style: none; font-size: 0.85rem">
+          <li style="margin-bottom: 12px">
+            <a href="#" style="color: var(--text-black); text-decoration: none"
+              >● 某主流模型对中国 EV 的认知延迟预警</a
+            >
+          </li>
+          <li style="margin-bottom: 12px">
+            <a href="#" style="color: var(--text-black); text-decoration: none"
+              >● 跨境电商平台偏好度偏移通报</a
+            >
+          </li>
+        </ul>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>© 2025 AI BrandRank Institute (AIBRI). 注册研究机构。马德里 | 香港 | 伦敦</p>
+      </div>
+    </footer>
+  </body>
+</html>
