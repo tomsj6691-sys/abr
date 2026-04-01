@@ -2,6 +2,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "abr",
   "main": ".open-next/worker.js",
+  "build": {
+    // Generate the OpenNext worker before Wrangler dev/deploy reads the entrypoint.
+    "command": "./node_modules/.bin/opennextjs-cloudflare build",
+  },
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {

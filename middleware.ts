@@ -48,7 +48,7 @@ function resolvePreferredLocale(request: NextRequest): Locale {
   return getLocaleFromAcceptLanguage(request.headers.get("accept-language"));
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const pathLocale = pathname.split("/").filter(Boolean)[0];
 
